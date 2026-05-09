@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>杜思远 · 个人作品集</title>
+  <style>
+    :root {
+      --bg-primary: #F9F8F5;
+      --bg-card: #FFFFFF;
+      --border-color: #EAE6DF;
+      --text-primary: #2A2A28;
+      --text-secondary: #5F5C55;
+      --accent-color: #9B8E7C;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 12px 40px rgba(0, 0, 0, 0.12);
+      --radius-sm: 12px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background-color: rgba(249, 248, 245, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+    nav.scrolled {
+      background-color: rgba(249, 248, 245, 0.98);
+      box-shadow: var(--shadow-sm);
+    }
+    .nav-content {
+      max-width: 1200px; margin: 0 auto; padding: 16px 24px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .logo {
+      font-size: 18px; font-weight: 600; color: var(--text-primary);
+      text-decoration: none; letter-spacing: 0.5px;
+      position: relative;
+    }
+    .logo::after {
+      content: ''; position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 2px; background-color: var(--accent-color);
+      border-radius: 1px; transition: var(--transition);
+    }
+    .logo:hover::after { width: 100%; }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-links a {
+      text-decoration: none; color: var(--text-secondary);
+      font-size: 14px; font-weight: 500; position: relative;
+      transition: var(--transition); cursor: pointer;
+      padding: 8px 0;
+    }
+    .nav-links a::before {
+      content: ''; position: absolute; bottom: 0; left: 50%;
+      width: 0; height: 2px; background-color: var(--accent-color);
+      border-radius: 1px;
+      transform: translateX(-50%); transition: var(--transition);
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-links a:hover::before { width: 100%; }
+    .nav-links a.active { color: var(--text-primary); }
+    .nav-links a.active::before { width: 100%; }
+
+    main { padding: 100px 0 60px; }
+    .section-title {
+      font-size: 24px; font-weight: 600; margin-bottom: 40px;
+      position: relative; padding-left: 20px;
+    }
+    .section-title::before {
+      content: ''; position: absolute; left: 0; top: 50%;
+      transform: translateY(-50%); width: 4px; height: 60%;
+      background: linear-gradient(180deg, var(--accent-color) 0%, transparent 100%);
+      border-radius: 2px;
+    }
+
+    .page-content { display: none; }
+    .page-content.active { display: block; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .animate-fadeIn { animation: fadeIn 0.6s ease forwards; }
+    .animate-fadeInUp { animation: fadeInUp 0.6s ease forwards; }
+    .animate-scaleIn { animation: scaleIn 0.5s ease forwards; }
+    .animate-slideInLeft { animation: slideInLeft 0.5s ease forwards; }
+
+    .profile-section {
+      display: grid; grid-template-columns: 180px 1fr; gap: 40px;
+      margin-bottom: 80px; align-items: start;
+    }
+    .avatar-placeholder {
+      width: 180px; height: 180px; border-radius: 50%;
+      background: linear-gradient(135deg, #EAE6DF 0%, #F5F3EF 100%);
+      display: flex; align-items: center; justify-content: center;
+      border: 2px dashed var(--border-color);
+      position: relative;
+      transition: var(--transition);
+    }
+    .avatar-placeholder:hover {
+      transform: scale(1.05);
+      border-color: var(--accent-color);
+      box-shadow: var(--shadow-lg);
+    }
+    .avatar-placeholder::before {
+      content: '头像占位'; font-size: 12px; color: var(--text-secondary);
+      transition: var(--transition);
+    }
+    .avatar-placeholder:hover::before { color: var(--accent-color); }
+
+    .profile-info h1 {
+      font-size: 32px; font-weight: 700; margin-bottom: 12px;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-color) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .profile-info .tagline {
+      font-size: 15px; color: var(--accent-color);
+      font-style: italic; margin-bottom: 24px;
+      position: relative;
+    }
+    .profile-info .tagline::after {
+      content: ''; position: absolute; bottom: -8px; left: 0;
+      width: 40px; height: 1px; background-color: var(--accent-color);
+    }
+    .profile-info p {
+      font-size: 15px; color: var(--text-secondary);
+      margin-bottom: 24px; line-height: 1.8;
+    }
+    .skills { display: flex; flex-wrap: wrap; gap: 14px; }
+    .skill-tag {
+      padding: 8px 20px; background-color: rgba(155, 142, 124, 0.06);
+      color: var(--accent-color); border-radius: 25px;
+      font-size: 13px; font-weight: 500;
+      border: 1px solid transparent;
+      transition: var(--transition);
+      position: relative; overflow: hidden;
+    }
+    .skill-tag::before {
+      content: ''; position: absolute; top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(155, 142, 124, 0.1), transparent);
+      transition: var(--transition);
+    }
+    .skill-tag:hover {
+      background-color: rgba(155, 142, 124, 0.12);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(155, 142, 124, 0.2);
+    }
+    .skill-tag:hover::before { left: 100%; }
+
+    .awards-section { margin-bottom: 80px; }
+    .awards-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    .award-card {
+      padding: 24px; background-color: var(--bg-card);
+      border-radius: var(--radius-md); border: 1px solid var(--border-color);
+      position: relative; transition: var(--transition);
+      overflow: hidden;
+    }
+    .award-card::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 4px; background: linear-gradient(180deg, var(--accent-color) 0%, rgba(155, 142, 124, 0.3) 100%);
+    }
+    .award-card::after {
+      content: ''; position: absolute; top: -50%; right: -50%;
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, rgba(155, 142, 124, 0.05) 0%, transparent 50%);
+      transform: rotate(45deg);
+      transition: var(--transition);
+      opacity: 0;
+    }
+    .award-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: var(--shadow-xl);
+      border-color: var(--accent-color);
+    }
+    .award-card:hover::after { opacity: 1; }
+    .award-year {
+      font-size: 13px; color: var(--accent-color);
+      font-weight: 600; margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+    .award-title { font-size: 14px; color: var(--text-primary); font-weight: 500; line-height: 1.6; }
+
+    .photo-placeholder-section { margin-bottom: 80px; }
+    .photo-placeholder {
+      width: 100%; height: 220px;
+      background: linear-gradient(135deg, #EAE6DF 0%, #F5F3EF 100%);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      border: 2px dashed var(--border-color);
+      position: relative;
+      transition: var(--transition);
+    }
+    .photo-placeholder:hover {
+      border-color: var(--accent-color);
+      transform: scale(1.01);
+      box-shadow: var(--shadow-md);
+    }
+    .photo-placeholder::before {
+      content: '实践/实习照片预留区'; font-size: 14px; color: var(--text-secondary);
+      transition: var(--transition);
+    }
+    .photo-placeholder:hover::before { color: var(--accent-color); }
+
+    .portfolio-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px;
+    }
+    .portfolio-card {
+      background-color: var(--bg-card); border-radius: var(--radius-lg);
+      overflow: hidden; border: 1px solid var(--border-color);
+      transition: var(--transition);
+      perspective: 1000px;
+    }
+    .portfolio-card:hover {
+      transform: translateY(-8px) rotateX(2deg);
+      box-shadow: var(--shadow-xl);
+      border-color: var(--accent-color);
+    }
+    .portfolio-card .image-wrapper {
+      width: 100%; aspect-ratio: 1;
+      background: linear-gradient(135deg, #EAE6DF 0%, #F5F3EF 100%);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    .portfolio-card .image-wrapper::before {
+      content: '美术作品占位'; font-size: 12px; color: var(--text-secondary);
+      transition: var(--transition);
+    }
+    .portfolio-card:hover .image-wrapper {
+      transform: scale(1.05);
+      filter: brightness(1.02);
+    }
+    .portfolio-card:hover .image-wrapper::before { color: var(--accent-color); }
+    .portfolio-card .image-wrapper.wide { aspect-ratio: 16/9; }
+    .portfolio-card .image-wrapper.wide::before { content: '效果图占位'; }
+    .portfolio-card .content { padding: 24px; }
+    .portfolio-card h3 {
+      font-size: 17px; font-weight: 600; margin-bottom: 10px;
+      color: var(--text-primary);
+      transition: var(--transition);
+    }
+    .portfolio-card:hover h3 { color: var(--accent-color); }
+    .portfolio-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+    .portfolio-card .meta {
+      display: flex; gap: 16px; margin-top: 14px;
+      font-size: 12px; color: var(--text-secondary);
+      padding-top: 14px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .about-section { max-width: 800px; }
+    .about-section p {
+      font-size: 15px; color: var(--text-secondary);
+      line-height: 1.8; margin-bottom: 24px;
+      text-align: justify;
+    }
+
+    .timeline { position: relative; padding-left: 48px; }
+    .timeline::before {
+      content: ''; position: absolute; left: 14px; top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--accent-color) 0%, var(--border-color) 100%);
+    }
+    .timeline-item {
+      position: relative; margin-bottom: 50px;
+      opacity: 0; transform: translateX(-20px);
+    }
+    .timeline-item.visible {
+      opacity: 1; transform: translateX(0);
+      transition: var(--transition);
+    }
+    .timeline-item::before {
+      content: ''; position: absolute; left: -42px; top: 6px;
+      width: 18px; height: 18px;
+      background-color: var(--bg-primary);
+      border: 3px solid var(--accent-color);
+      border-radius: 50%;
+      transition: var(--transition);
+    }
+    .timeline-item:hover::before {
+      transform: scale(1.3);
+      box-shadow: 0 0 20px rgba(155, 142, 124, 0.4);
+    }
+    .timeline-item h3 { font-size: 17px; font-weight: 600; margin-bottom: 10px; }
+    .timeline-item .date {
+      font-size: 12px; color: var(--accent-color);
+      font-weight: 600; margin-bottom: 14px;
+      letter-spacing: 0.5px;
+    }
+    .timeline-item p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+
+    .quote {
+      font-size: 17px; font-style: italic; color: var(--text-secondary);
+      border-left: 4px solid var(--accent-color);
+      padding: 20px 24px; margin: 50px 0;
+      background: linear-gradient(90deg, rgba(155, 142, 124, 0.05) 0%, transparent 100%);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      position: relative;
+    }
+    .quote::before {
+      content: '“'; position: absolute; top: -10px; left: 0;
+      font-size: 48px; color: rgba(155, 142, 124, 0.2);
+      font-family: serif;
+    }
+
+    footer {
+      padding: 50px 0; border-top: 1px solid var(--border-color);
+      text-align: center;
+      position: relative;
+    }
+    footer::before {
+      content: ''; position: absolute; top: -20px; left: 50%;
+      transform: translateX(-50%);
+      width: 40px; height: 40px;
+      background-color: var(--bg-primary);
+      border: 2px solid var(--accent-color);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    footer::after {
+      content: '·'; position: absolute; top: -10px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 24px; color: var(--accent-color);
+    }
+    footer p { font-size: 14px; color: var(--text-secondary); }
+
+    .cursor-dot {
+      position: fixed; width: 8px; height: 8px;
+      background-color: var(--accent-color);
+      border-radius: 50%; pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.1s ease;
+      opacity: 0;
+    }
+    .cursor-dot.active { opacity: 1; }
+
+    @media (max-width: 768px) {
+      .nav-links { gap: 20px; }
+      .nav-links a { font-size: 13px; }
+      .profile-section { grid-template-columns: 1fr; gap: 24px; text-align: center; }
+      .avatar-placeholder { width: 140px; height: 140px; margin: 0 auto; }
+      .skills { justify-content: center; }
+      .awards-grid, .portfolio-grid { grid-template-columns: 1fr; }
+      .section-title { font-size: 20px; }
+      .profile-info h1 { font-size: 26px; }
+    }
+    @media (max-width: 480px) {
+      .nav-content { flex-direction: column; gap: 12px; }
+      .nav-links { gap: 16px; }
+      main { padding: 120px 0 60px; }
+      .container { padding: 0 16px; }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="cursor-dot" id="cursorDot"></div>
+  
+  <nav id="mainNav">
+    <div class="nav-content">
+      <div class="logo">杜思远 / DU SIYUAN</div>
+      <div class="nav-links">
+        <a id="nav-home" class="active" onclick="showPage('home')">个人信息与荣誉</a>
+        <a id="nav-portfolio" onclick="showPage('portfolio')">作品集</a>
+        <a id="nav-about" onclick="showPage('about')">关于</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div id="page-home" class="page-content active">
+      <section class="profile-section animate-fadeInUp">
+        <div class="avatar-placeholder"></div>
+        <div class="profile-info">
+          <h1>杜思远 Du Siyuan</h1>
+          <p class="tagline">以技术为笔，以协作为纲的创意执行者</p>
+          <p>环境艺术设计专业，具备场景原画、插画、建模渲染、剪辑能力，拥有团队领导经验及两年外贸实习经历。</p>
+          <div class="skills">
+            <span class="skill-tag">场景原画</span>
+            <span class="skill-tag">插画</span>
+            <span class="skill-tag">3D建模</span>
+            <span class="skill-tag">渲染</span>
+            <span class="skill-tag">剪辑</span>
+            <span class="skill-tag">空间叙事</span>
+            <span class="skill-tag">团队统筹</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="awards-section">
+        <h2 class="section-title">获奖荣誉</h2>
+        <div class="awards-grid">
+          <div class="award-card"><div class="award-year">2025</div><div class="award-title">第十一届"挑战杯"广东工业大学课外学术科技作品竞赛二等奖（省级）</div></div>
+          <div class="award-card"><div class="award-year">2025</div><div class="award-title">第十一届"挑战杯"广东工业大学"百千万工程"专项赛三等奖（省级）</div></div>
+          <div class="award-card"><div class="award-year">2024</div><div class="award-title">第十九届"揭榜挂帅"挑战杯专项赛三等奖（校级）</div></div>
+          <div class="award-card"><div class="award-year">2024</div><div class="award-title">第一届"龙吟杯"三等奖（校级）</div></div>
+          <div class="award-card"><div class="award-year">2025</div><div class="award-title">第四届广东工业大学主题创意设计大赛三等奖（院级）</div></div>
+          <div class="award-card"><div class="award-year">2024</div><div class="award-title">暑期"三下乡"社会实践二等奖</div></div>
+          <div class="award-card"><div class="award-year">2025</div><div class="award-title">"智能手工艺工作坊"优秀证书</div></div>
+        </div>
+      </section>
+
+      <section class="photo-placeholder-section">
+        <div class="photo-placeholder"></div>
+      </section>
+    </div>
+
+    <div id="page-portfolio" class="page-content">
+      <section class="section-2d">
+        <h2 class="section-title">2D美术作品</h2>
+        <div class="portfolio-grid">
+          <div class="portfolio-card"><div class="image-wrapper"></div><div class="content"><h3>27hours</h3><p>时间主题的概念插画，探索时间与空间的关系</p></div></div>
+          <div class="portfolio-card"><div class="image-wrapper"></div><div class="content"><h3>CODE·方圆</h3><p>代码与传统文化元素结合的视觉设计</p></div></div>
+          <div class="portfolio-card"><div class="image-wrapper"></div><div class="content"><h3>广彩瓷器联名</h3><p>小游戏与广彩瓷器，品牌结合设计</p></div></div>
+          <div class="portfolio-card"><div class="image-wrapper"></div><div class="content"><h3>LEO 作品练习</h3><p>临摹与创作结合的绘画练习作品</p></div></div>
+        </div>
+      </section>
+
+      <section class="section-design" style="margin-top: 100px;">
+        <h2 class="section-title">环境设计方案</h2>
+        <div class="portfolio-grid">
+          <div class="portfolio-card"><div class="image-wrapper wide"></div><div class="content"><h3>基于时空因果机理的智慧城市模型构建</h3><div class="meta"><span>2025</span><span>肇庆小赳村</span></div><p>打造可停留、沉浸体验的乡村艺术综合体，包含艺术展馆综合体+体育活动中心+停车场</p></div></div>
+          <div class="portfolio-card"><div class="image-wrapper wide"></div><div class="content"><h3>寻江·觅影</h3><div class="meta"><span>2025</span><span>珠江边</span></div><p>珠江边茶馆会所，基于游客交互娱乐的游戏化空间设计</p></div></div>
+          <div class="portfolio-card"><div class="image-wrapper wide"></div><div class="content"><h3>Ail Café·沙面</h3><div class="meta"><span>2024</span><span>沙面岛</span></div><p>沙面岛咖啡艺术空间，融合欧式建筑风格与现代咖啡文化</p></div></div>
+          <div class="portfolio-card"><div class="image-wrapper wide"></div><div class="content"><h3>Nexus·以太</h3><div class="meta"><span>2024</span><span>广东工业大学</span></div><p>国际设计项目，包含桌面摆件 CODE·方圆，探索科技与艺术的融合</p></div></div>
+        </div>
+      </section>
+    </div>
+
+    <div id="page-about" class="page-content">
+      <section class="about-section">
+        <h2 class="section-title">关于我</h2>
+        <p>我是杜思远，一名环境艺术设计专业的创意执行者。秉持"以技术为笔，以协作为纲"的创作理念，我致力于将技术与艺术完美融合，从2D平面到3D空间，再到4D时间维度的设计思维，追求全方位的设计表达。</p>
+        <p>作为一名设计师，我拥有全链路的设计能力，涵盖场景原画、插画、3D建模、渲染到剪辑等多个环节。这种综合性的能力让我能够在项目中担任多种角色，从创意构思到最终呈现，提供完整的设计解决方案。</p>
+
+        <h2 class="section-title" style="margin-top: 80px;">教育经历</h2>
+        <div class="timeline">
+          <div class="timeline-item">
+            <h3>广东工业大学 - 环境艺术设计</h3>
+            <div class="date">2023 - 2027</div>
+            <p>主修课程：环境设计基础、空间构成、建筑设计原理、景观设计、室内设计等</p>
+            <p style="margin-top: 12px;">自修课程：场景概念设计、视频剪辑、游戏场景原画、场景模型构建</p>
+          </div>
+        </div>
+
+        <h2 class="section-title" style="margin-top: 80px;">跨领域经历</h2>
+        <div class="timeline">
+          <div class="timeline-item">
+            <h3>外贸实习经历</h3>
+            <div class="date">2024 - 2025</div>
+            <p>两年外贸实习经验，锻炼了出色的沟通能力与抗压能力，培养了敏锐的商业意识。这段经历让我理解了市场需求与设计价值之间的关系，学会用商业思维审视设计方案。</p>
+          </div>
+        </div>
+
+        <h2 class="section-title" style="margin-top: 80px;">团队领导经验</h2>
+        <div class="timeline">
+          <div class="timeline-item">
+            <h3>多次担任项目负责人</h3>
+            <div class="date">2024 - 2025</div>
+            <p>多次作为负责人带领团队获得省级奖项，擅长统筹规划与激发团队创意。在项目管理中，我注重每个成员的优势发挥，营造积极协作的团队氛围，共同攻克设计难题。</p>
+          </div>
+        </div>
+
+        <div class="quote">"一个真正的大师，永远怀揣着一颗学徒的心" —— 英雄联盟 易大师</div>
+      </section>
+
+      <section class="photo-placeholder-section" style="margin-top: 60px;">
+        <div class="photo-placeholder" style="height: 280px;"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 杜思远 · 作品集</p>
+  </footer>
+
+  <script>
+    function showPage(pageId) {
+      document.querySelectorAll('.page-content').forEach(page => {
+        page.classList.remove('active');
+        page.style.opacity = '0';
+      });
+      document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+      
+      setTimeout(() => {
+        const targetPage = document.getElementById('page-' + pageId);
+        targetPage.classList.add('active');
+        targetPage.style.animation = 'fadeInUp 0.5s ease forwards';
+      }, 100);
+      
+      document.getElementById('nav-' + pageId).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.addEventListener('scroll', function() {
+      const nav = document.getElementById('mainNav');
+      if (window.scrollY > 50) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+
+      const timelineItems = document.querySelectorAll('.timeline-item');
+      timelineItems.forEach(item => {
+        const rect = item.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.85) {
+          item.classList.add('visible');
+        }
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const timelineItems = document.querySelectorAll('.timeline-item');
+      setTimeout(() => {
+        timelineItems.forEach((item, index) => {
+          setTimeout(() => {
+            item.classList.add('visible');
+          }, index * 150);
+        });
+      }, 300);
+    });
+
+    const cursorDot = document.getElementById('cursorDot');
+    document.addEventListener('mousemove', function(e) {
+      cursorDot.style.left = e.clientX - 4 + 'px';
+      cursorDot.style.top = e.clientY - 4 + 'px';
+      cursorDot.classList.add('active');
+    });
+
+    document.addEventListener('mouseleave', function() {
+      cursorDot.classList.remove('active');
+    });
+
+    const cards = document.querySelectorAll('.portfolio-card, .award-card');
+    cards.forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        cursorDot.style.transform = 'scale(2)';
+      });
+      card.addEventListener('mouseleave', function() {
+        cursorDot.style.transform = 'scale(1)';
+      });
+    });
+  </script>
+</body>
+</html>
