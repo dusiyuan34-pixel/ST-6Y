@@ -2,12 +2,16 @@ require('dotenv').config({ path: '.env.local' });
 const express = require('express');
 const path = require('path');
 const app = express();
-const PORT = process.env.PORT || 3000;
+
+const __dirname = path.resolve();
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
-// Get API Configuration
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', timestamp: Date.now() });
+});
+
 app.get('/api/config', (req, res) => {
     res.json({
         apiBaseUrl: process.env.API_BASE_URL || 'https://api.kie.ai/api/v1',
@@ -16,7 +20,6 @@ app.get('/api/config', (req, res) => {
     });
 });
 
-// Create image generation task
 app.post('/api/generate', async (req, res) => {
     try {
         const { prompt, aspectRatio } = req.body;
@@ -61,7 +64,6 @@ app.post('/api/generate', async (req, res) => {
     }
 });
 
-// Query task status
 app.get('/api/query', async (req, res) => {
     try {
         const { taskId } = req.query;
@@ -97,7 +99,6 @@ app.get('/api/query', async (req, res) => {
     }
 });
 
-// Serve HTML files
 app.get('/create.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'create.html'));
 });
@@ -106,7 +107,14 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
-    console.log(`API Key: ${process.env.API_KEY ? 'Configured' : 'Not configured'}`);
-});
+// Vercel export
+module.exports = app;
+
+// Local server
+const PORT = process.env.PORT || 3000;
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`Server running at http://localhost:${PORT}`);
+        console.log(`API Key: ${process.env.API_KEY ? 'Configured' : 'Not configured'}`);
+    });
+}

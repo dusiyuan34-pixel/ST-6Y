@@ -1,1 +1,18 @@
-{}
+{
+  "version": 2,
+  "public": ".",
+  "functions": {
+    "api/index.js": {
+      "runtime": "@vercel/node"
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/index.js"
+    },
+    {
+      "handle": "filesystem"
+    }
+  ]
+}
