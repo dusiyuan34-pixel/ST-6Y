@@ -1,11 +1,14 @@
 {
   "version": 2,
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/server.js"
+  "functions": {
+    "api/config.js": {
+      "runtime": "@vercel/node"
+    },
+    "api/generate.js": {
+      "runtime": "@vercel/node"
+    },
+    "api/query.js": {
+      "runtime": "@vercel/node"
     }
-  ]
+  }
 }
