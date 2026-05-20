@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "functions": {
+    "api/config.js": {
+      "runtime": "@vercel/node"
+    },
+    "api/generate.js": {
+      "runtime": "@vercel/node"
+    },
+    "api/query.js": {
+      "runtime": "@vercel/node"
+    }
+  }
+}
