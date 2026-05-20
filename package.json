@@ -1,0 +1,32 @@
+{
+  "name": "tera-ai-agent",
+  "version": "1.0.0",
+  "description": "思T-6 AI Creative Platform - GPT Image 2 API Integration",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "start:frontend": "node server-frontend.js",
+    "dev": "nodemon server.js",
+    "dev:frontend": "nodemon server-frontend.js",
+    "build": "echo 'Build completed successfully'",
+    "health": "curl http://localhost:3000/api/health"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "keywords": [
+    "AI",
+    "GPT-Image",
+    "kie.ai",
+    "Image Generation",
+    "Creative"
+  ],
+  "author": "TERA Team",
+  "license": "MIT"
+}
