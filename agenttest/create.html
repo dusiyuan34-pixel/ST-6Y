@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create - 思T-6</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="interactive-bg">
+        <canvas id="bgCanvas"></canvas>
+        <div class="bg-particles" id="bgParticles"></div>
+        <div class="bg-grid"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="brand-logo">思T-6</span>
+            <span class="brand-sub">/ Create</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">首页</a>
+            <a href="about.html">关于我们</a>
+        </div>
+    </nav>
+
+    <main class="create-main">
+        <div class="create-workspace">
+            <aside class="create-sidebar">
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Status</h3>
+                    <div class="status-indicator" id="statusIndicator">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Checking configuration...</span>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Prompt</h3>
+                    <textarea class="prompt-input" id="promptInput" placeholder="Describe your imagination..."></textarea>
+                    <div class="prompt-tags">
+                        <span class="prompt-tag-btn" data-prompt="futuristic city">futuristic</span>
+                        <span class="prompt-tag-btn" data-prompt="organic architecture">organic</span>
+                        <span class="prompt-tag-btn" data-prompt="minimalist design">minimal</span>
+                        <span class="prompt-tag-btn" data-prompt="cyberpunk style">cyberpunk</span>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Style</h3>
+                    <div class="style-grid">
+                        <div class="style-card active" data-style="auto">
+                            <div class="style-preview auto-preview"></div>
+                            <span>Auto</span>
+                        </div>
+                        <div class="style-card" data-style="photorealistic">
+                            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=100&h=100&fit=crop" alt="Photorealistic">
+                            <span>Photo</span>
+                        </div>
+                        <div class="style-card" data-style="illustration">
+                            <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=100&h=100&fit=crop" alt="Illustration">
+                            <span>Art</span>
+                        </div>
+                        <div class="style-card" data-style="3d">
+                            <img src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=100&h=100&fit=crop" alt="3D">
+                            <span>3D</span>
+                        </div>
+                        <div class="style-card" data-style="anime">
+                            <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=100&h=100&fit=crop" alt="Anime">
+                            <span>Anime</span>
+                        </div>
+                        <div class="style-card" data-style="abstract">
+                            <img src="https://images.unsplash.com/photo-1549490349-8643362247b5?w=100&h=100&fit=crop" alt="Abstract">
+                            <span>Abstract</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Aspect Ratio</h3>
+                    <div class="ratio-options">
+                        <button class="ratio-btn active" data-ratio="1:1">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            </svg>
+                            1:1
+                        </button>
+                        <button class="ratio-btn" data-ratio="16:9">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="2" y="6" width="20" height="12" rx="2"/>
+                            </svg>
+                            16:9
+                        </button>
+                        <button class="ratio-btn" data-ratio="9:16">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="6" y="2" width="12" height="20" rx="2"/>
+                            </svg>
+                            9:16
+                        </button>
+                        <button class="ratio-btn" data-ratio="4:3">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="3" y="5" width="18" height="14" rx="2"/>
+                            </svg>
+                            4:3
+                        </button>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Quality</h3>
+                    <div class="quality-slider">
+                        <input type="range" id="qualitySlider" min="1" max="10" value="7">
+                        <div class="quality-labels">
+                            <span>Fast</span>
+                            <span id="qualityValue">7</span>
+                            <span>HD</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="generate-btn" id="generateBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                    Generate
+                </button>
+            </aside>
+
+            <div class="canvas-area">
+                <div class="canvas-header">
+                    <div class="canvas-tabs">
+                        <button class="canvas-tab active">Canvas</button>
+                        <button class="canvas-tab">History</button>
+                    </div>
+                    <div class="canvas-actions">
+                        <button class="action-btn" id="downloadBtn" title="Download">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn" id="shareBtn" title="Share">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="18" cy="5" r="3"/>
+                                <circle cx="6" cy="12" r="3"/>
+                                <circle cx="18" cy="19" r="3"/>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn" id="enhanceBtn" title="Enhance">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="canvas-container" id="canvasContainer">
+                    <div class="canvas-placeholder" id="placeholderState">
+                        <div class="placeholder-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <polyline points="21 15 16 10 5 21"/>
+                            </svg>
+                        </div>
+                        <p>Enter a prompt and click Generate</p>
+                        <span>or</span>
+                        <div class="placeholder-suggestions">
+                            <button class="suggestion-btn" data-prompt="A serene Japanese garden at sunset with traditional architecture">Japanese Garden</button>
+                            <button class="suggestion-btn" data-prompt="Neon-lit cyberpunk cityscape with flying vehicles">Cyberpunk City</button>
+                            <button class="suggestion-btn" data-prompt="Abstract geometric sculpture in a white gallery">Abstract Art</button>
+                        </div>
+                    </div>
+
+                    <div class="generating-state" id="generatingState">
+                        <div class="generating-orb">
+                            <div class="orb-inner"></div>
+                            <div class="orb-ring"></div>
+                            <div class="orb-ring"></div>
+                            <div class="orb-ring"></div>
+                        </div>
+                        <p class="generating-text" id="generatingText">Creating your masterpiece<span class="dots"></span></p>
+                        <div class="generating-progress">
+                            <div class="progress-bar"></div>
+                        </div>
+                    </div>
+
+                    <div class="result-state" id="resultState">
+                        <div class="result-image" id="resultImage">
+                            <img class="canvas-image" id="canvasImage" src="" alt="Generated">
+                            <div class="image-overlay">
+                                <button class="overlay-btn" title="Regenerate" id="regenerateBtn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M23 4v6h-6"/>
+                                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                                    </svg>
+                                </button>
+                                <button class="overlay-btn" title="Variations">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <rect x="3" y="3" width="7" height="7"/>
+                                        <rect x="14" y="3" width="7" height="7"/>
+                                        <rect x="14" y="14" width="7" height="7"/>
+                                        <rect x="3" y="14" width="7" height="7"/>
+                                    </svg>
+                                </button>
+                                <button class="overlay-btn" title="Edit">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M12 20h9"/>
+                                        <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="canvas-toolbar">
+                    <button class="tool-btn active" title="Select">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/>
+                        </svg>
+                    </button>
+                    <button class="tool-btn" title="Crop">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M6.13 1L6 16a2 2 0 0 0 2 2h15"/>
+                            <path d="M1 6.13L16 6a2 2 0 0 1 2 2v15"/>
+                        </svg>
+                    </button>
+                    <button class="tool-btn" title="Erase">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M20 20H7L3 16c-.8-.8-.8-2 0-2.8L13.4 3a2 2 0 0 1 2.8 0l5.6 5.6a2 2 0 0 1 0 2.8L12 21"/>
+                        </svg>
+                    </button>
+                    <div class="tool-divider"></div>
+                    <button class="tool-btn" title="Undo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M3 7v6h6"/>
+                            <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>
+                        </svg>
+                    </button>
+                    <button class="tool-btn" title="Redo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21 7v6h-6"/>
+                            <path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <aside class="history-panel">
+                <div class="panel-header">
+                    <h3>Recent</h3>
+                    <button class="clear-btn">Clear</button>
+                </div>
+                <div class="history-grid" id="historyGrid">
+                    <div class="history-item">
+                        <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?w=150&h=150&fit=crop" alt="History">
+                    </div>
+                    <div class="history-item">
+                        <img src="https://images.unsplash.com/photo-1549490349-8643362247b5?w=150&h=150&fit=crop" alt="History">
+                    </div>
+                    <div class="history-item">
+                        <img src="https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=150&h=150&fit=crop" alt="History">
+                    </div>
+                    <div class="history-item">
+                        <img src="https://images.unsplash.com/photo-1614624532983-4ce03382d63d?w=150&h=150&fit=crop" alt="History">
+                    </div>
+                    <div class="history-item">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop" alt="History">
+                    </div>
+                    <div class="history-item">
+                        <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=150&h=150&fit=crop" alt="History">
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3>Favorites</h3>
+                    <div class="favorites-list">
+                        <div class="favorite-item">
+                            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=100&h=100&fit=crop" alt="Favorite">
+                            <span>Abstract Flow</span>
+                        </div>
+                        <div class="favorite-item">
+                            <img src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=100&h=100&fit=crop" alt="Favorite">
+                            <span>Chromatic</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <span class="brand-logo">思T-6</span>
+                <p>AI-native creative system</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>Product</h4>
+                    <a href="#">Features</a>
+                    <a href="#">Pricing</a>
+                    <a href="#">API</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <a href="about.html">About</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Careers</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Resources</h4>
+                    <a href="#">Documentation</a>
+                    <a href="#">Help Center</a>
+                    <a href="#">Press</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2026 思T-6. All rights reserved.</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        let apiConfig = {};
+        let currentPrompt = '';
+        let currentAspectRatio = 'auto';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadApiConfig();
+            initCreatePage();
+        });
+
+        async function loadApiConfig() {
+            try {
+                const response = await fetch('/api/config');
+                if (response.ok) {
+                    apiConfig = await response.json();
+                    updateStatusIndicator(true);
+                } else {
+                    updateStatusIndicator(false, 'Failed to load config');
+                }
+            } catch (error) {
+                updateStatusIndicator(false, 'Server not running');
+            }
+        }
+
+        function updateStatusIndicator(isConfigured, message = '') {
+            const statusDot = document.querySelector('.status-dot');
+            const statusText = document.querySelector('.status-text');
+            
+            if (isConfigured) {
+                statusDot.classList.add('active');
+                statusText.textContent = 'Ready to generate';
+            } else {
+                statusDot.classList.remove('active');
+                statusText.textContent = message || 'Not configured';
+            }
+        }
+
+        function initCreatePage() {
+            initGenerateControls();
+            initPromptTags();
+            initStyleCards();
+            initRatioButtons();
+            initQualitySlider();
+            initSuggestionBtns();
+            initRegenerateBtn();
+            initCanvasTabs();
+        }
+
+        function initGenerateControls() {
+            const generateBtn = document.getElementById('generateBtn');
+            const placeholderState = document.getElementById('placeholderState');
+            const generatingState = document.getElementById('generatingState');
+            const resultState = document.getElementById('resultState');
+            const generatingText = document.getElementById('generatingText');
+
+            generateBtn.addEventListener('click', async () => {
+                const prompt = document.getElementById('promptInput').value.trim();
+                
+                if (!prompt) {
+                    alert('Please enter a prompt');
+                    document.getElementById('promptInput').focus();
+                    return;
+                }
+
+                const activeRatio = document.querySelector('.ratio-btn.active');
+                let aspectRatio = 'auto';
+                if (activeRatio) {
+                    const ratio = activeRatio.dataset.ratio;
+                    switch(ratio) {
+                        case '16:9':
+                            aspectRatio = '16:9';
+                            break;
+                        case '9:16':
+                            aspectRatio = '9:16';
+                            break;
+                        case '4:3':
+                            aspectRatio = '4:3';
+                            break;
+                        default:
+                            aspectRatio = 'auto';
+                    }
+                }
+
+                currentPrompt = prompt;
+                currentAspectRatio = aspectRatio;
+
+                placeholderState.style.display = 'none';
+                resultState.style.display = 'none';
+                generatingState.style.display = 'flex';
+                generateBtn.disabled = true;
+                generateBtn.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                    Generating...
+                `;
+
+                try {
+                    generatingText.textContent = 'Creating your masterpiece...';
+                    
+                    // Create task
+                    const createResponse = await fetch('/api/generate', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ prompt, aspectRatio })
+                    });
+
+                    if (!createResponse.ok) {
+                        const errorData = await createResponse.json();
+                        throw new Error(errorData.error || 'Failed to create task');
+                    }
+
+                    const createData = await createResponse.json();
+                    const taskId = createData.data.taskId;
+
+                    // Poll for result
+                    const maxAttempts = 60;
+                    const interval = 2000;
+
+                    for (let i = 0; i < maxAttempts; i++) {
+                        await sleep(interval);
+
+                        const queryResponse = await fetch(`/api/query?taskId=${taskId}`);
+                        
+                        if (!queryResponse.ok) {
+                            const errorData = await queryResponse.json();
+                            throw new Error(errorData.error || 'Failed to query task');
+                        }
+
+                        const queryData = await queryResponse.json();
+
+                        if (queryData.code === 200 && queryData.data) {
+                            const state = queryData.data.state;
+                            
+                            if (state === 'success') {
+                                const resultJson = JSON.parse(queryData.data.resultJson);
+                                const images = resultJson.resultUrls || [];
+                                if (images.length > 0) {
+                                    const canvasImage = document.getElementById('canvasImage');
+                                    canvasImage.src = images[0];
+                                    generatingState.style.display = 'none';
+                                    resultState.style.display = 'block';
+                                    addToHistory(images[0]);
+                                    return;
+                                } else {
+                                    throw new Error('No images in response');
+                                }
+                            } else if (state === 'fail') {
+                                throw new Error(queryData.data.failMsg || 'Generation failed');
+                            }
+                        }
+                    }
+
+                    throw new Error('Timeout: Image generation took too long');
+
+                } catch (error) {
+                    alert('Error: ' + error.message);
+                    generatingState.style.display = 'none';
+                    placeholderState.style.display = 'flex';
+                } finally {
+                    generateBtn.disabled = false;
+                    generateBtn.innerHTML = `
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5"/>
+                            <path d="M2 12l10 5 10-5"/>
+                        </svg>
+                        Generate
+                    `;
+                }
+            });
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function addToHistory(imageUrl) {
+            const historyGrid = document.getElementById('historyGrid');
+            const newItem = document.createElement('div');
+            newItem.className = 'history-item';
+            newItem.innerHTML = `<img src="${imageUrl}" alt="History">`;
+            historyGrid.insertBefore(newItem, historyGrid.firstChild);
+        }
+
+        function initRegenerateBtn() {
+            const regenerateBtn = document.getElementById('regenerateBtn');
+            if (regenerateBtn) {
+                regenerateBtn.addEventListener('click', () => {
+                    if (currentPrompt) {
+                        document.getElementById('generateBtn').click();
+                    }
+                });
+            }
+        }
+
+        function initPromptTags() {
+            const tagBtns = document.querySelectorAll('.prompt-tag-btn');
+            const promptInput = document.getElementById('promptInput');
+
+            tagBtns.forEach(tag => {
+                tag.addEventListener('click', () => {
+                    const currentPrompt = promptInput.value.trim();
+                    const newText = currentPrompt ? `${currentPrompt}, ${tag.dataset.prompt}` : tag.dataset.prompt;
+                    promptInput.value = newText;
+                });
+            });
+        }
+
+        function initStyleCards() {
+            const styleCards = document.querySelectorAll('.style-card');
+
+            styleCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    styleCards.forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                });
+            });
+        }
+
+        function initRatioButtons() {
+            const ratioBtns = document.querySelectorAll('.ratio-btn');
+
+            ratioBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    ratioBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
+        }
+
+        function initQualitySlider() {
+            const slider = document.getElementById('qualitySlider');
+            const valueDisplay = document.getElementById('qualityValue');
+
+            slider.addEventListener('input', () => {
+                valueDisplay.textContent = slider.value;
+            });
+        }
+
+        function initSuggestionBtns() {
+            const suggestionBtns = document.querySelectorAll('.suggestion-btn');
+            const promptInput = document.getElementById('promptInput');
+
+            suggestionBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    promptInput.value = btn.dataset.prompt;
+                    document.getElementById('generateBtn').click();
+                });
+            });
+        }
+
+        function initCanvasTabs() {
+            const tabs = document.querySelectorAll('.canvas-tab');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                });
+            });
+        }
+    </script>
+</body>
+</html>
