@@ -4,17 +4,10 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const __dirname = path.resolve();
-console.log('Current directory:', __dirname);
-console.log('Static files path:', path.join(__dirname));
-
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
-app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', timestamp: Date.now() });
-});
-
+// Get API Configuration
 app.get('/api/config', (req, res) => {
     res.json({
         apiBaseUrl: process.env.API_BASE_URL || 'https://api.kie.ai/api/v1',
@@ -23,6 +16,7 @@ app.get('/api/config', (req, res) => {
     });
 });
 
+// Create image generation task
 app.post('/api/generate', async (req, res) => {
     try {
         const { prompt, aspectRatio } = req.body;
@@ -67,6 +61,7 @@ app.post('/api/generate', async (req, res) => {
     }
 });
 
+// Query task status
 app.get('/api/query', async (req, res) => {
     try {
         const { taskId } = req.query;
@@ -102,17 +97,12 @@ app.get('/api/query', async (req, res) => {
     }
 });
 
+// Serve HTML files
 app.get('/create.html', (req, res) => {
-    console.log('Serving create.html from:', path.join(__dirname, 'create.html'));
     res.sendFile(path.join(__dirname, 'create.html'));
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-app.get('*', (req, res) => {
-    console.log('Request received for:', req.path);
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
