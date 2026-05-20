@@ -1,21 +1,17 @@
-require('dotenv').config({ path: '.env.local' });
+require('dotenv').config({ path: '../.env.local' });
 const express = require('express');
 const path = require('path');
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 const __dirname = path.resolve();
-console.log('Current directory:', __dirname);
-console.log('Static files path:', path.join(__dirname));
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname)));
 
-app.get('/api/health', (req, res) => {
+app.get('/health', (req, res) => {
     res.json({ status: 'ok', timestamp: Date.now() });
 });
 
-app.get('/api/config', (req, res) => {
+app.get('/config', (req, res) => {
     res.json({
         apiBaseUrl: process.env.API_BASE_URL || 'https://api.kie.ai/api/v1',
         modelName: process.env.MODEL_NAME || 'gpt-image-2-text-to-image',
@@ -23,7 +19,7 @@ app.get('/api/config', (req, res) => {
     });
 });
 
-app.post('/api/generate', async (req, res) => {
+app.post('/generate', async (req, res) => {
     try {
         const { prompt, aspectRatio } = req.body;
         const apiKey = process.env.API_KEY;
@@ -67,7 +63,7 @@ app.post('/api/generate', async (req, res) => {
     }
 });
 
-app.get('/api/query', async (req, res) => {
+app.get('/query', async (req, res) => {
     try {
         const { taskId } = req.query;
         const apiKey = process.env.API_KEY;
@@ -102,21 +98,4 @@ app.get('/api/query', async (req, res) => {
     }
 });
 
-app.get('/create.html', (req, res) => {
-    console.log('Serving create.html from:', path.join(__dirname, 'create.html'));
-    res.sendFile(path.join(__dirname, 'create.html'));
-});
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-app.get('*', (req, res) => {
-    console.log('Request received for:', req.path);
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
-    console.log(`API Key: ${process.env.API_KEY ? 'Configured' : 'Not configured'}`);
-});
+module.exports = app;
