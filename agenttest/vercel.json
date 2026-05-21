@@ -3,15 +3,15 @@
   "builds": [
     {
       "src": "api/config.js",
-      "use": "@vercel/node"
+      "use": "@vercel/edge"
     },
     {
       "src": "api/generate.js",
-      "use": "@vercel/node"
+      "use": "@vercel/edge"
     },
     {
       "src": "api/query.js",
-      "use": "@vercel/node"
+      "use": "@vercel/edge"
     },
     {
       "src": "*.html",
@@ -39,6 +39,10 @@
     }
   ],
   "routes": [
+    {
+      "src": "/",
+      "dest": "/index.html"
+    },
     {
       "src": "/api/config",
       "dest": "/api/config.js"
