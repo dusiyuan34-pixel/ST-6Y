@@ -6,8 +6,13 @@
   "scripts": {
     "start": "node server.js",
     "start:frontend": "node server-frontend.js",
+    "start:test": "node server-test.js",
+    "start:prod": "node server-production.js",
     "dev": "nodemon server.js",
     "dev:frontend": "nodemon server-frontend.js",
+    "dev:test": "nodemon server-test.js",
+    "dev:prod": "nodemon server-production.js",
+    "test": "node test-api.js",
     "build": "echo 'Build completed successfully'",
     "vercel-build": "echo 'Vercel build completed'",
     "health": "curl http://localhost:3000/api/health"
