@@ -3,19 +3,10 @@
   "builds": [
     {
       "src": "api/index.js",
-      "use": "@vercel/node@3.1.0"
-    },
-    {
-      "src": "*.html",
-      "use": "@vercel/static@2"
-    },
-    {
-      "src": "*.css",
-      "use": "@vercel/static@2"
-    },
-    {
-      "src": "*.js",
-      "use": "@vercel/static@2"
+      "use": "@vercel/node",
+      "config": {
+        "runtime": "nodejs20.x"
+      }
     }
   ],
   "routes": [
