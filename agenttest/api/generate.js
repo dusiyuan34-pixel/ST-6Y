@@ -1,3 +1,5 @@
+export const config = { runtime: 'edge' };
+
 export async function OPTIONS() {
   return new Response(null, {
     headers: {

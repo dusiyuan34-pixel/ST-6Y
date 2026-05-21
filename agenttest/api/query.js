@@ -1,3 +1,5 @@
+export const config = { runtime: 'edge' };
+
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const taskId = searchParams.get('taskId');
