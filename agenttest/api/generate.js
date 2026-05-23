@@ -51,18 +51,41 @@ export async function POST(request) {
 
     if (!response.ok) {
       return new Response(
-        JSON.stringify({ error: data.msg || 'Failed to create task' }),
+        JSON.stringify({ error: data.msg || data.message || 'Failed to create task' }),
         { status: response.status, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } }
       );
     }
 
+    // Wrap the response to match frontend expected format: { data: { taskId } }
+    let wrappedData;
+    
+    if (data.data && data.data.taskId) {
+      // API returns { data: { taskId } } format
+      wrappedData = data;
+    } else if (data.taskId) {
+      // API returns { taskId } format, wrap it
+      wrappedData = { data: { taskId: data.taskId } };
+    } else if (data.result && data.result.taskId) {
+      // API returns { result: { taskId } } format
+      wrappedData = { data: { taskId: data.result.taskId } };
+    } else {
+      // Unknown format, return as-is with error
+      return new Response(
+        JSON.stringify({ 
+          error: 'Unexpected API response format',
+          rawResponse: data 
+        }),
+        { status: 500, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } }
+      );
+    }
+
     return new Response(
-      JSON.stringify(data),
+      JSON.stringify(wrappedData),
       { headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } }
     );
   } catch (error) {
     return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
+      JSON.stringify({ error: 'Internal server error: ' + error.message }),
       { status: 500, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } }
     );
   }
